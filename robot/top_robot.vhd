@@ -53,15 +53,35 @@ alias ir_in : std_logic is pio(84);
 alias bluetooth_out : std_logic is pio(87);
 alias bluetooth_in : std_logic is pio(86);
 
+signal speed : STD_LOGIC_VECTOR (2 downto 0);
+signal dir : std_logic;
+signal driver_alarm : std_logic;
+signal driver_wait_time : std_logic_vector(15 downto 0);
+signal driver_enable : std_logic;
+
+signal motor_alarm_1 : std_logic;
+signal motor_alarm_2 : std_logic;
+signal motor_enable_1 : std_logic;
+signal motor_enable_2 : std_logic;
+signal motor_wait_time_1 : std_logic_vector(15 downto 0);
+signal motor_wait_time_2 : std_logic_vector(15 downto 0);
+
+signal usclk : std_logic;
+signal msclk : std_logic;
+
 component timer
     port(
-        
-    );
+        waittime : in std_logic_vector(15 downto 0);
+        enable : in std_logic;
+        alarm : out std_logic;
+        msclk : in std_logic);
+end component;
 
 component clock
     port(
         sysclk : in std_logic;
-    );
+        msclk : out  STD_LOGIC;
+        usclk : out  STD_LOGIC);
 end component;
 
 component motor
@@ -78,59 +98,63 @@ end component;
 component driver
     Port ( alarm : in  STD_LOGIC;
            speed : out  STD_LOGIC_VECTOR (2 downto 0);
-           direction : out  STD_LOGIC);
+           direction : out  STD_LOGIC;
+           wait_time : out std_logic_vector(15 downto 0);
+           enable_timer : out std_logic);
 end component;
 
 begin
 
-    signal speed : STD_LOGIC_VECTOR (2 downto 0);
-
     ClockInst : clock
         port map (
-            mclk => sysclk;
+            sysclk => mclk,
+            usclk => usclk,
+            msclk => msclk
         );
         
     MotorInst : motor
         port map (
-           speed => speed;
-           dir => dir;
-           motor_ena => motor_ena;
-           motor_enb => motor_enb;
-           motor_in1 => motor_in1;
-           motor_in2 => motor_in2;
-           motor_in3 => motor_in3;
-           motor_in4 => motor_in4;
+           speed => speed,
+           dir => dir,
+           motor_ena => motor_ena,
+           motor_enb => motor_enb,
+           motor_in1 => motor_in1,
+           motor_in2 => motor_in2,
+           motor_in3 => motor_in3,
+           motor_in4 => motor_in4
         );
 
     DriverInst : driver
         port map (
-            alarm => driver_alarm;
-            speed => speed;
-            direction => dir;
+            alarm => driver_alarm,
+            speed => speed,
+            direction => dir,
+            wait_time => driver_wait_time,
+            enable_timer => driver_enable
         );
 
     DriverTimerInst : timer
         port map (
-            wait_time => driver_wait_time;
-            alarm => driver_alarm;
-            enable => driver_enable;
-            ms_clock => ms_clock;
+            waittime => driver_wait_time,
+            alarm => driver_alarm,
+            enable => driver_enable,
+            msclk => msclk
         );
 
     MotorTimer1Inst : timer
         port map (
-            wait_time => motor_wait_time_1;
-            alarm => motor_alarm_1;
-            enable => motor_enable_1;
-            ms_clock => ms_clock;
+            waittime => motor_wait_time_1,
+            alarm => motor_alarm_1,
+            enable => motor_enable_1,
+            msclk => msclk
         );
 
     MotorTimer2Inst : timer
         port map (
-            wait_time => motor_wait_time_2;
-            alarm => motor_alarm_2;
-            enable => motor_enable_2;
-            ms_clock => ms_clock;
+            waittime => motor_wait_time_2,
+            alarm => motor_alarm_2,
+            enable => motor_enable_2,
+            msclk => msclk
         );
 
 end Behavioral;

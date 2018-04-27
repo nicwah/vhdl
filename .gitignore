@@ -7,11 +7,6 @@ robot/iseconfig/top_robot.xreport
 robot/top_robot_summary.html
 iseconfig/top_robot.xreport
 _ngo/
-_xmsgs/map.xmsgs
-_xmsgs/ngdbuild.xmsgs
-_xmsgs/par.xmsgs
-_xmsgs/trce.xmsgs
-_xmsgs/xst.xmsgs
 pepExtractor.prj
 top_robot.bld
 top_robot.cmd_log
@@ -49,4 +44,4 @@ top_robot_xst.xrpt
 webtalk_pn.xml
 xlnx_auto_0_xdb/
 xst/
-
+robot/_xmsgs/

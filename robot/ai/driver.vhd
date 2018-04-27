@@ -74,7 +74,7 @@ begin
 	
 	BehaviourStateMachine : process(state)
    begin
-	if rising_edge(state(0)) or rising_edge(state(1)) or rising_edge(state(2)) then
+--	if rising_edge(state(0)) or rising_edge(state(1)) or rising_edge(state(2)) then
 		case state is
             when idle_state =>
                 speed <= "000";
@@ -104,7 +104,7 @@ begin
 					 direction <= '0';
 					 enable_timer <= '0';
 		end case;
-   end if;
+--   end if;
 	end process;
 	
 end Behavioral;

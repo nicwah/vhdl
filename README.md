@@ -19,3 +19,4 @@ The overall goal of the conference is to learn VHDL and implement a robot which 
         \ '\ /     \  |HERO |  _/       /
          \  \       \ |     | /        /
           \  \      \        /
+x

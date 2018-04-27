@@ -53,8 +53,34 @@ alias ir_in : std_logic is pio(84);
 alias bluetooth_out : std_logic is pio(87);
 alias bluetooth_in : std_logic is pio(86);
 
+component timer
+    port(
+    );
+end component;
+
+component clock
+    port(
+    );
+end component;
+
+component motor
+    port(
+    );
+end component;
+
 begin
 
+    TimerInst : timer
+        port map (
+        );
+        
+    ClockInst : clock
+        port map (
+        );
+        
+    MotorInst : motor
+        port map (
+        );
 
 end Behavioral;
 

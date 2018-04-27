@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2018-04-27T10:55:14</DateModified>
+  <DateModified>2018-04-27T11:02:45</DateModified>
   <ModuleName>top_robot</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
   <SavedFilePath>/home/torbjorn/git/vhdl/robot/iseconfig/top_robot.xreport</SavedFilePath>

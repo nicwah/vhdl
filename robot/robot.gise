@@ -28,6 +28,13 @@
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/par.xmsgs"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/trce.xmsgs"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
+    <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="motor_tb_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="motor_tb_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="motor_tb_isim_beh.wdb"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGDBUILD_LOG" xil_pn:name="top_robot.bld"/>
     <file xil_pn:fileType="FILE_CMD_LOG" xil_pn:name="top_robot.cmd_log"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_LSO" xil_pn:name="top_robot.lso"/>
@@ -62,6 +69,7 @@
     <file xil_pn:fileType="FILE_WEBTALK" xil_pn:name="top_robot_usage.xml"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="top_robot_xst.xrpt"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xlnx_auto_0_xdb"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
   </files>
@@ -71,25 +79,54 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1524821924" xil_pn:in_ck="-3652716123590440312" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1524821924">
+    <transform xil_pn:end_ts="1524825151" xil_pn:in_ck="2782338632305855294" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1524825151">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="InputAdded"/>
-      <status xil_pn:value="InputChanged"/>
+      <outfile xil_pn:name="ai/driver.vhd"/>
+      <outfile xil_pn:name="motor_tb.vhd"/>
+      <outfile xil_pn:name="tb_robot.vhd"/>
       <outfile xil_pn:name="top_robot.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1524821924" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-9044832904953873877" xil_pn:start_ts="1524821924">
+    <transform xil_pn:end_ts="1524825151" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="6007270071232046492" xil_pn:start_ts="1524825151">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1524821924" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="3418866178078708973" xil_pn:start_ts="1524821924">
+    <transform xil_pn:end_ts="1524825151" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="3230536666129621662" xil_pn:start_ts="1524825151">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
     <transform xil_pn:end_ts="1524821924" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="-3369223161162166457" xil_pn:start_ts="1524821924">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1524825151" xil_pn:in_ck="2782338632305855294" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1524825151">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="ai/driver.vhd"/>
+      <outfile xil_pn:name="motor_tb.vhd"/>
+      <outfile xil_pn:name="tb_robot.vhd"/>
+      <outfile xil_pn:name="top_robot.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1524825154" xil_pn:in_ck="2782338632305855294" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="1577091154518497690" xil_pn:start_ts="1524825151">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="fuse.log"/>
+      <outfile xil_pn:name="isim"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="motor_tb_beh.prj"/>
+      <outfile xil_pn:name="motor_tb_isim_beh.exe"/>
+      <outfile xil_pn:name="xilinxsim.ini"/>
+    </transform>
+    <transform xil_pn:end_ts="1524825154" xil_pn:in_ck="4893552605006560469" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2385247936124509145" xil_pn:start_ts="1524825154">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="isim.cmd"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="motor_tb_isim_beh.wdb"/>
     </transform>
     <transform xil_pn:end_ts="1524820046" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1524820046">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -125,19 +162,10 @@
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputAdded"/>
       <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
-      <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
-      <outfile xil_pn:name="top_robot.lso"/>
-      <outfile xil_pn:name="top_robot.ngc"/>
-      <outfile xil_pn:name="top_robot.ngr"/>
-      <outfile xil_pn:name="top_robot.prj"/>
-      <outfile xil_pn:name="top_robot.stx"/>
-      <outfile xil_pn:name="top_robot.syr"/>
-      <outfile xil_pn:name="top_robot.xst"/>
-      <outfile xil_pn:name="top_robot_xst.xrpt"/>
-      <outfile xil_pn:name="webtalk_pn.xml"/>
-      <outfile xil_pn:name="xst"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
     <transform xil_pn:end_ts="1524820067" xil_pn:in_ck="6578114222110546020" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="-7716653003157044656" xil_pn:start_ts="1524820067">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -146,52 +174,41 @@
     <transform xil_pn:end_ts="1524820080" xil_pn:in_ck="391533451433624386" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="6848768497524759732" xil_pn:start_ts="1524820067">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
-      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="NotReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
-      <outfile xil_pn:name="_ngo"/>
-      <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
-      <outfile xil_pn:name="top_robot.bld"/>
-      <outfile xil_pn:name="top_robot.ngd"/>
-      <outfile xil_pn:name="top_robot_ngdbuild.xrpt"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputRemoved"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
     <transform xil_pn:end_ts="1524820090" xil_pn:in_ck="391533451433624387" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="3236488012892527759" xil_pn:start_ts="1524820080">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
-      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="NotReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
-      <outfile xil_pn:name="_xmsgs/map.xmsgs"/>
-      <outfile xil_pn:name="top_robot.pcf"/>
-      <outfile xil_pn:name="top_robot_map.map"/>
-      <outfile xil_pn:name="top_robot_map.mrp"/>
-      <outfile xil_pn:name="top_robot_map.ncd"/>
-      <outfile xil_pn:name="top_robot_map.ngm"/>
-      <outfile xil_pn:name="top_robot_map.xrpt"/>
-      <outfile xil_pn:name="top_robot_summary.xml"/>
-      <outfile xil_pn:name="top_robot_usage.xml"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputRemoved"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
     <transform xil_pn:end_ts="1524820109" xil_pn:in_ck="4747180358936361948" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="1934304854298957634" xil_pn:start_ts="1524820090">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
-      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="NotReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
-      <outfile xil_pn:name="_xmsgs/par.xmsgs"/>
-      <outfile xil_pn:name="top_robot.ncd"/>
-      <outfile xil_pn:name="top_robot.pad"/>
-      <outfile xil_pn:name="top_robot.par"/>
-      <outfile xil_pn:name="top_robot.ptwx"/>
-      <outfile xil_pn:name="top_robot.unroutes"/>
-      <outfile xil_pn:name="top_robot.xpi"/>
-      <outfile xil_pn:name="top_robot_pad.csv"/>
-      <outfile xil_pn:name="top_robot_pad.txt"/>
-      <outfile xil_pn:name="top_robot_par.xrpt"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputRemoved"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
     <transform xil_pn:end_ts="1524820109" xil_pn:in_ck="391533451433624255" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416187" xil_pn:start_ts="1524820103">
       <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="NotReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
-      <outfile xil_pn:name="_xmsgs/trce.xmsgs"/>
-      <outfile xil_pn:name="top_robot.twr"/>
-      <outfile xil_pn:name="top_robot.twx"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputRemoved"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
   </transforms>
 

@@ -41,6 +41,14 @@
       <association xil_pn:name="PostRouteSimulation" xil_pn:seqID="48"/>
       <association xil_pn:name="PostTranslateSimulation" xil_pn:seqID="48"/>
     </file>
+    <file xil_pn:name="clock/clock.vhd" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="57"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="57"/>
+    </file>
+    <file xil_pn:name="clock/timer.vhd" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="58"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="58"/>
+    </file>
   </files>
 
   <properties>

@@ -43,7 +43,8 @@ ARCHITECTURE behavior OF tb_driver IS
     PORT(
          alarm : IN  std_logic;
          speed : OUT  std_logic_vector(2 downto 0);
-         direction : OUT  std_logic;
+         forward : out  std_logic;
+         turn : out  std_logic_vector (2 downto 0);
          wait_time : out std_logic_vector (15 downto 0);
          enable_timer : out std_logic
         );
@@ -54,8 +55,9 @@ ARCHITECTURE behavior OF tb_driver IS
 
  	--Outputs
     signal speed : std_logic_vector(2 downto 0);
-    signal direction : std_logic;
-	signal wait_time : std_logic_vector (15 downto 0);
+    signal forward : std_logic;
+    signal turn : std_logic_vector (2 downto 0);
+    signal wait_time : std_logic_vector (15 downto 0);
 	signal enable_timer : std_logic;
 
 	constant clock_interval : time := 20 ns;
@@ -66,7 +68,8 @@ BEGIN
     uut: driver PORT MAP (
           alarm => alarm,
           speed => speed,
-          direction => direction,
+          forward => forward,
+          turn => turn,
           wait_time => wait_time,
           enable_timer => enable_timer
         );
@@ -78,35 +81,50 @@ BEGIN
         wait for 10 ns;	
 
         -- insert stimulus here 
-        -- idle => drive_forward
+        -- idle => toggle forward/backward
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
         wait for 50 ns;
 
-        -- drive_forward => stop1
+        for I in 0 to 2 loop
+        -- toggle forward/backward => drive
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
         wait for 50 ns;
 
-        -- stop1 => drive_backward
+        -- drive => turn right
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
         wait for 50 ns;
 
-        -- drive_backward => stop2
+        -- turn right => turn left
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
         wait for 50 ns;
 
-        -- stop2 => drive_forward
+        -- turn left => turn ahead
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
         wait for 50 ns;
+
+        -- turn ahead => stop
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
+
+        -- stop => toggle forward/backward
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
+
+        end loop;
 
         wait;
     end process;

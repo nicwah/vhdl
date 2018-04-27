@@ -48,8 +48,8 @@ begin
 	motor_enb <= speed(0);
 	motor_in1 <= dir;
 	motor_in2 <= NOT(dir);
-	motor_in3 <= dir;
-	motor_in4 <= NOT(dir);
+	motor_in4 <= dir;
+	motor_in3 <= NOT(dir);
 	
 end Behavioral;
 

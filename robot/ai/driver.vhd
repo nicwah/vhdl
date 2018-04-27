@@ -30,9 +30,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity driver is
-    Port ( alarm : in  STD_LOGIC;
-           speed : out  STD_LOGIC_VECTOR (2 downto 0);
-           direction : out  STD_LOGIC);
+    Port ( alarm : in  std_logic;
+           speed : out  std_logic_vector (2 downto 0);
+           direction : out  std_logic;
+			  wait_time : out std_logic_vector (15 downto 0);
+			  enable_timer : out std_logic);
 end driver;
 
 architecture Behavioral of driver is
@@ -44,6 +46,10 @@ constant drive_backward_state : std_logic_vector(3 downto 0) := "0011";
 constant stop2_state : std_logic_vector(3 downto 0) := "0100";
 
 signal state : std_logic_vector(3 downto 0) := idle_state;
+
+constant wait_1s : std_logic_vector(15 downto 0) := "0000001111101000";
+constant wait_2s : std_logic_vector(15 downto 0) := "0000011111010000";
+constant wait_4s : std_logic_vector(15 downto 0) := "0000111110100000";
 
 begin
 	ChangeStateMachine : process(alarm)
@@ -73,19 +79,30 @@ begin
             when idle_state =>
                 speed <= "000";
 					 direction <= '0';
+					 wait_time <= wait_4s;
+					 enable_timer <= '1';
             when drive_forward_state =>
                 speed <= "001";
 					 direction <= '1';
+					 wait_time <= wait_2s;
+					 enable_timer <= '1';
 				when stop1_state =>
                 speed <= "000";					
+					 wait_time <= wait_1s;
+					 enable_timer <= '1';
 				when drive_backward_state =>
                 speed <= "001";
 					 direction <= '0';
+					 wait_time <= wait_2s;
+					 enable_timer <= '1';
 				when stop2_state =>
                 speed <= "000";
+					 wait_time <= wait_1s;
+					 enable_timer <= '1';
 				when others =>
                 speed <= "000";
 					 direction <= '0';
+					 enable_timer <= '0';
 		end case;
    end if;
 	end process;

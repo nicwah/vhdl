@@ -1,4 +1,10 @@
-top_robot_summary.html
+robot/_xmsgs/map.xmsgs
+robot/_xmsgs/ngdbuild.xmsgs
+robot/_xmsgs/par.xmsgs
+robot/_xmsgs/trce.xmsgs
+robot/_xmsgs/xst.xmsgs
+robot/iseconfig/top_robot.xreport
+robot/top_robot_summary.html
 iseconfig/top_robot.xreport
 _ngo/
 _xmsgs/map.xmsgs

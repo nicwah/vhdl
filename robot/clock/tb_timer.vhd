@@ -31,7 +31,7 @@ ARCHITECTURE behavior OF tb_timer IS
    signal alarm : std_logic;
 
    -- Clock period definitions
-   constant msclk_period : time := 10 ns;
+   constant msclk_period : time := 1 ms;
  
 BEGIN
  

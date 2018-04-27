@@ -43,67 +43,72 @@ ARCHITECTURE behavior OF tb_driver IS
     PORT(
          alarm : IN  std_logic;
          speed : OUT  std_logic_vector(2 downto 0);
-         direction : OUT  std_logic
+         direction : OUT  std_logic;
+         wait_time : out std_logic_vector (15 downto 0);
+         enable_timer : out std_logic
         );
     END COMPONENT;
     
-
-   --Inputs
-   signal alarm : std_logic := '0';
+    --Inputs
+    signal alarm : std_logic := '0';
 
  	--Outputs
-   signal speed : std_logic_vector(2 downto 0);
-   signal direction : std_logic;
+    signal speed : std_logic_vector(2 downto 0);
+    signal direction : std_logic;
+	signal wait_time : std_logic_vector (15 downto 0);
+	signal enable_timer : std_logic;
 
 	constant clock_interval : time := 20 ns;
 	
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: driver PORT MAP (
+    uut: driver PORT MAP (
           alarm => alarm,
           speed => speed,
-          direction => direction
+          direction => direction,
+          wait_time => wait_time,
+          enable_timer => enable_timer
         );
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      wait for 10 ns;	
-		
-      -- insert stimulus here 
-		-- idle => drive_forward
-		alarm <= '1';
-      wait for clock_interval;
-		alarm <= '0';
-      wait for 50 ns;
+    -- Stimulus process
+    stim_proc: process
+    begin		
+        -- hold reset state for 100 ns.
+        wait for 10 ns;	
 
-		-- drive_forward => stop1
-		alarm <= '1';
-      wait for clock_interval;
-		alarm <= '0';
-      wait for 50 ns;
+        -- insert stimulus here 
+        -- idle => drive_forward
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
 
-		-- stop1 => drive_backward
-		alarm <= '1';
-      wait for clock_interval;
-		alarm <= '0';
-      wait for 50 ns;
+        -- drive_forward => stop1
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
 
-		-- drive_backward => stop2
-		alarm <= '1';
-      wait for clock_interval;
-		alarm <= '0';
-      wait for 50 ns;
+        -- stop1 => drive_backward
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
 
-		-- stop2 => drive_forward
-		alarm <= '1';
-      wait for clock_interval;
-		alarm <= '0';
-      wait for 50 ns;
+        -- drive_backward => stop2
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
 
-      wait;
-   end process;
+        -- stop2 => drive_forward
+        alarm <= '1';
+        wait for clock_interval;
+        alarm <= '0';
+        wait for 50 ns;
+
+        wait;
+    end process;
 
 END;

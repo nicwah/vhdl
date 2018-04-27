@@ -28,9 +28,9 @@ begin
 			-- Milli
 			mdivider:=mdivider+1;
  			if mdivider < 25000 then
-				msclk <= 1;
+				msclk <= '1';
 			else
-				msclk <= 0;
+				msclk <= '0';
 			end if;			
 			if mdivider = 50000 then
 			    mdivider:=0;
@@ -38,9 +38,9 @@ begin
 			-- Micro
 			udivider:=udivider+1;
  			if udivider < 25 then
-				usclk <= 1;
+				usclk <= '1';
 			else
-				usclk <= 0;
+				usclk <= '0';
 			end if;			
 			if udivider = 50 then
 			    udivider:=0;

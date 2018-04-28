@@ -31,6 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity driver is
     Port ( alarm : in  std_logic;
+           line_sensor : in std_logic_vector(2 downto 0);
            speed : out  std_logic_vector (2 downto 0);
            forward : out  std_logic;
            turn : out  std_logic_vector (2 downto 0);
@@ -40,15 +41,18 @@ end driver;
 
 architecture Behavioral of driver is
 
-constant idle_state : std_logic_vector(3 downto 0) := "0000";
-constant toggle_forward_backward_state : std_logic_vector(3 downto 0) := "0001";
-constant drive_state : std_logic_vector(3 downto 0) := "0010";
-constant turn_right_state : std_logic_vector(3 downto 0) := "0011";
-constant turn_left_state : std_logic_vector(3 downto 0) := "0100";
-constant turn_ahead_state : std_logic_vector(3 downto 0) := "0101";
-constant stop_state : std_logic_vector(3 downto 0) := "0110";
+type states is (
+    idle_state, 
+    toggle_forward_backward_state, 
+    drive_state, 
+    turn_hard_right_state, 
+    turn_right_state, 
+    turn_ahead_state, 
+    turn_left_state, 
+    turn_hard_left_state, 
+    stop_state);
+signal state : states;
 
-signal state : std_logic_vector(3 downto 0) := idle_state;
 signal forward_i : std_logic := '0';
 
 constant wait_1ms : std_logic_vector(15 downto 0) := "0000000000000001";
@@ -61,36 +65,45 @@ constant speed_normal : std_logic_vector(2 downto 0) := "001";
 
 constant turn_hard_left  : std_logic_vector(2 downto 0) := "000";
 constant turn_left       : std_logic_vector(2 downto 0) := "001";
-constant turn_ahead       : std_logic_vector(2 downto 0) := "010";
+constant turn_ahead      : std_logic_vector(2 downto 0) := "010";
 constant turn_right      : std_logic_vector(2 downto 0) := "011";
 constant turn_hard_right : std_logic_vector(2 downto 0) := "100";
 
+constant veering_left     : std_logic_vector(2 downto 0) := "001";
+constant drifting_left    : std_logic_vector(2 downto 0) := "011";
+constant on_track         : std_logic_vector(2 downto 0) := "010";
+constant drifting_right   : std_logic_vector(2 downto 0) := "110";
+constant veering_right    : std_logic_vector(2 downto 0) := "100";
+constant on_starting_line : std_logic_vector(2 downto 0) := "101";
+constant on_finish_line   : std_logic_vector(2 downto 0) := "111";
+constant off_track        : std_logic_vector(2 downto 0) := "000";
+
 begin
-    ChangeStateMachine : process(alarm)
+    
+    ChangeStatesStateMachine : process(alarm, line_sensor)
     begin
-    if rising_edge(alarm) then
+        if rising_edge(alarm) then
+            case state is
+                when idle_state =>
+                    state <= toggle_forward_backward_state;
+                when toggle_forward_backward_state =>
+                    state <= drive_state;
+                when stop_state =>
+                    state <= toggle_forward_backward_state;
+                when others => null;
+            end case;
+        end if;
+
         case state is
-            when idle_state =>
-                state <= toggle_forward_backward_state;
-            when toggle_forward_backward_state =>
-                state <= drive_state;
             when drive_state =>
-                state <= turn_right_state;
-            when turn_right_state =>
-                state <= turn_left_state;
-            when turn_left_state =>
-                state <= turn_ahead_state;
-            when turn_ahead_state =>
-                state <= stop_state;
-            when stop_state =>
-                state <= toggle_forward_backward_state;
-            when others =>
-                state <= idle_state;
+                if not line_sensor /= off_track then
+                    state <= stop_state;
+                end if;
+            when others => null;
         end case;
-    end if;
 	end process;
 	
-    BehaviourStateMachine : process(state)
+    PerformActionsStateMachine : process(state)
     begin
         case state is
             when idle_state =>
@@ -105,23 +118,25 @@ begin
             when drive_state =>
                 speed <= speed_normal;
                 wait_time <= wait_2s;
+            when turn_hard_right_state =>
+                turn <= turn_hard_right;
+                wait_time <= wait_1ms;
             when turn_right_state =>
                 turn <= turn_right;
-                wait_time <= wait_2s;
-            when turn_left_state =>
-                turn <= turn_left;
-                wait_time <= wait_1s;
+                wait_time <= wait_1ms;
             when turn_ahead_state =>
                 turn <= turn_ahead;
-                wait_time <= wait_1s;
+                wait_time <= wait_1ms;
+            when turn_left_state =>
+                turn <= turn_left;
+                wait_time <= wait_1ms;
+            when turn_hard_left_state =>
+                turn <= turn_hard_left;
+                wait_time <= wait_1ms;
             when stop_state =>
                 speed <= speed_none;	
                 wait_time <= wait_1s;
-            when others =>
-                speed <= speed_none;
-                forward_i <= '0';
-                turn <= turn_ahead;
-                enable_timer <= '0';
+            when others => null;
         end case;
         forward <= forward_i;
     end process;

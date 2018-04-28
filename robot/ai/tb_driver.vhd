@@ -27,10 +27,7 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
+use ieee.numeric_std.all;
  
 ENTITY tb_driver IS
 END tb_driver;
@@ -41,8 +38,9 @@ ARCHITECTURE behavior OF tb_driver IS
  
     COMPONENT driver
     PORT(
-         alarm : IN  std_logic;
-         speed : OUT  std_logic_vector(2 downto 0);
+         alarm : in  std_logic;
+         line_sensor : in std_logic_vector(2 downto 0);
+         speed : out  std_logic_vector(2 downto 0);
          forward : out  std_logic;
          turn : out  std_logic_vector (2 downto 0);
          wait_time : out std_logic_vector (15 downto 0);
@@ -52,7 +50,8 @@ ARCHITECTURE behavior OF tb_driver IS
     
     --Inputs
     signal alarm : std_logic := '0';
-
+    signal line_sensor : std_logic_vector(2 downto 0) := "000";
+    
  	--Outputs
     signal speed : std_logic_vector(2 downto 0);
     signal forward : std_logic;
@@ -67,6 +66,7 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
     uut: driver PORT MAP (
           alarm => alarm,
+          line_sensor => line_sensor,
           speed => speed,
           forward => forward,
           turn => turn,
@@ -78,51 +78,34 @@ BEGIN
     stim_proc: process
     begin		
         -- hold reset state for 100 ns.
-        wait for 10 ns;	
+        wait for 100 ns;	
 
         -- insert stimulus here 
+
         -- idle => toggle forward/backward
         alarm <= '1';
         wait for clock_interval;
         alarm <= '0';
-        wait for 50 ns;
-
-        for I in 0 to 2 loop
-        -- toggle forward/backward => drive
-        alarm <= '1';
         wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
 
-        -- drive => turn right
-        alarm <= '1';
-        wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
+        for i in 1 to 7 loop
+            line_sensor <= "000";
 
-        -- turn right => turn left
-        alarm <= '1';
-        wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
+            -- toggle forward/backward => drive
+            alarm <= '1';
+            wait for clock_interval;
+            alarm <= '0';
+            wait for clock_interval;
 
-        -- turn left => turn ahead
-        alarm <= '1';
-        wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
+            -- drive => stop
+            line_sensor <= std_logic_vector(to_unsigned(i, line_sensor'length));
+            wait for clock_interval;
 
-        -- turn ahead => stop
-        alarm <= '1';
-        wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
-
-        -- stop => toggle forward/backward
-        alarm <= '1';
-        wait for clock_interval;
-        alarm <= '0';
-        wait for 50 ns;
+            -- stop => toggle forward/backward
+            alarm <= '1';
+            wait for clock_interval;
+            alarm <= '0';
+            wait for clock_interval;
 
         end loop;
 

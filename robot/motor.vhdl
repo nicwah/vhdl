@@ -31,7 +31,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity motor is
     Port ( speed : in  STD_LOGIC_VECTOR (2 downto 0);
-           dir : in  STD_LOGIC;
+           forward : in  STD_LOGIC;
+           turn : in STD_LOGIC_VECTOR(2 downto 0);
            motor_ena : out  STD_LOGIC;
            motor_enb : out  STD_LOGIC;
            motor_in1 : out  STD_LOGIC;
@@ -46,10 +47,10 @@ begin
   
 	motor_ena <= speed(0);
 	motor_enb <= speed(0);
-	motor_in1 <= dir;
-	motor_in2 <= NOT(dir);
-	motor_in4 <= dir;
-	motor_in3 <= NOT(dir);
+	motor_in1 <= forward;
+	motor_in2 <= NOT(forward);
+	motor_in4 <= forward;
+	motor_in3 <= NOT(forward);
 	
 end Behavioral;
 

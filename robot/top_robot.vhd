@@ -54,7 +54,9 @@ alias bluetooth_out : std_logic is pio(87);
 alias bluetooth_in : std_logic is pio(86);
 
 signal speed : STD_LOGIC_VECTOR (2 downto 0);
-signal dir : std_logic;
+signal actual_speed : STD_LOGIC_VECTOR (2 downto 0);
+signal forward : std_logic;
+signal turn : std_logic_vector(2 downto 0);
 signal driver_alarm : std_logic;
 signal driver_wait_time : std_logic_vector(15 downto 0);
 signal driver_enable : std_logic;
@@ -86,7 +88,8 @@ end component;
 
 component motor
     Port ( speed : in  STD_LOGIC_VECTOR (2 downto 0);
-           dir : in  STD_LOGIC;
+           forward : in  STD_LOGIC;
+           turn : in STD_LOGIC_VECTOR(2 downto 0);
            motor_ena : out  STD_LOGIC;
            motor_enb : out  STD_LOGIC;
            motor_in1 : out  STD_LOGIC;
@@ -96,14 +99,23 @@ component motor
 end component;
 
 component driver
-    Port ( alarm : in  STD_LOGIC;
-           speed : out  STD_LOGIC_VECTOR (2 downto 0);
-           direction : out  STD_LOGIC;
-           wait_time : out std_logic_vector(15 downto 0);
+    Port ( alarm : in  std_logic;
+           speed : out  std_logic_vector (2 downto 0);
+           forward : out  std_logic;
+           turn : out  std_logic_vector (2 downto 0);
+           wait_time : out std_logic_vector (15 downto 0);
            enable_timer : out std_logic);
 end component;
 
 begin
+
+    led(0) <= forward;
+    led(1) <= turn(0) or turn(1) or turn(2);
+    led(2) <= driver_enable;
+    led(3) <= motor_enable_1;
+    led(4) <= motor_enable_2;
+
+    actual_speed <= "000" when sw(0) = '0' else speed;
 
     ClockInst : clock
         port map (
@@ -114,8 +126,9 @@ begin
         
     MotorInst : motor
         port map (
-           speed => speed,
-           dir => dir,
+           speed => actual_speed,
+           forward => forward,
+           turn => turn,
            motor_ena => motor_ena,
            motor_enb => motor_enb,
            motor_in1 => motor_in1,
@@ -128,7 +141,8 @@ begin
         port map (
             alarm => driver_alarm,
             speed => speed,
-            direction => dir,
+            forward => forward,
+            turn => turn,
             wait_time => driver_wait_time,
             enable_timer => driver_enable
         );

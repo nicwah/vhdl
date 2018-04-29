@@ -38,12 +38,12 @@ ARCHITECTURE behavior OF tb_driver IS
  
     COMPONENT driver
     PORT(
-         alarm : in  std_logic;
+         alarm : in std_logic;
          line_sensor : in std_logic_vector(2 downto 0);
-         speed : out  std_logic_vector(2 downto 0);
-         forward : out  std_logic;
-         turn : out  std_logic_vector (2 downto 0);
-         wait_time : out std_logic_vector (15 downto 0);
+         speed : out std_logic_vector(2 downto 0);
+         forward : out std_logic;
+         turn : out std_logic_vector (2 downto 0);
+         wait_time : out std_logic_vector(15 downto 0);
          enable_timer : out std_logic
         );
     END COMPONENT;
@@ -56,10 +56,8 @@ ARCHITECTURE behavior OF tb_driver IS
     signal speed : std_logic_vector(2 downto 0);
     signal forward : std_logic;
     signal turn : std_logic_vector (2 downto 0);
-    signal wait_time : std_logic_vector (15 downto 0);
-	signal enable_timer : std_logic;
-
-	constant clock_interval : time := 20 ns;
+    signal wait_time : std_logic_vector(15 downto 0);
+    signal enable_timer : std_logic;
 	
 BEGIN
  
@@ -81,33 +79,61 @@ BEGIN
         wait for 100 ns;	
 
         -- insert stimulus here 
+        line_sensor <= "000";
 
-        -- idle => toggle forward/backward
+        -- idle => toggle
         alarm <= '1';
-        wait for clock_interval;
+        wait for 10 ns;
         alarm <= '0';
-        wait for clock_interval;
+        
+        wait for 20 ns;
 
-        for i in 1 to 7 loop
-            line_sensor <= "000";
+        -- toggle => drive past line
+        alarm <= '1';
+        wait for 10 ns;
+        alarm <= '0';
+        
+        wait for 20 ns;
 
-            -- toggle forward/backward => drive
-            alarm <= '1';
-            wait for clock_interval;
-            alarm <= '0';
-            wait for clock_interval;
+        -- drive past line => drive until line found
+        alarm <= '1';
+        wait for 10 ns;
+        alarm <= '0';
 
-            -- drive => stop
-            line_sensor <= std_logic_vector(to_unsigned(i, line_sensor'length));
-            wait for clock_interval;
+        -- drive until line found
+        wait for 100 ns;
 
-            -- stop => toggle forward/backward
-            alarm <= '1';
-            wait for clock_interval;
-            alarm <= '0';
-            wait for clock_interval;
+        -- drive until line found => stop
+        line_sensor <= "111";
+        wait for 10 ns;
+        line_sensor <= "000";
 
-        end loop;
+        wait for 20 ns;
+
+        -- stop => toggle
+        alarm <= '1';
+        wait for 10 ns;
+        alarm <= '0';
+        
+        wait for 20 ns;
+        
+        -- toggle => drive past line
+        alarm <= '1';
+        wait for 10 ns;
+        alarm <= '0';        
+        
+        wait for 20 ns;
+        
+        -- drive past line => drive until line found
+        alarm <= '1';
+        wait for 10 ns;
+        alarm <= '0';        
+
+        -- drive until line found
+        wait for 100 ns;            
+
+        -- drive until line found => stop
+        line_sensor <= "111";
 
         wait;
     end process;

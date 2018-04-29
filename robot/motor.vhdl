@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -44,13 +44,46 @@ entity motor is
            enable_1    : out STD_LOGIC;
            wait_time_2 : out std_logic_vector(15 downto 0);
            alarm_2     : in STD_LOGIC;
-           enable_2    : out STD_LOGIC
+           enable_2    : out STD_LOGIC;
+           usclk : in STD_LOGIC
            );
 end motor;
 
 architecture Behavioral of motor is
 
-begin
+
+COMPONENT pwm is
+    Port ( enable : in  STD_LOGIC;
+           usclk : in  STD_LOGIC;
+           power : in  STD_LOGIC_VECTOR(31 downto 0);  -- u seconds on
+           period : in  STD_LOGIC_VECTOR(31 downto 0); -- u seconds
+           pulse : out  STD_LOGIC
+           );
+ END COMPONENT;
+ 
+ 
+    --Inputs
+   signal power  : STD_LOGIC_VECTOR(31 downto 0) := std_logic_vector(to_unsigned(300, 32)); 
+ 
+ 	--Outputs
+   signal pulse : STD_LOGIC;
+   
+   signal motor_ena_i : std_logic;
+   signal motor_enb_i : std_logic;
+ begin
+ 
+ 
+  pwmInst :  pwm PORT MAP (
+          enable => '1',
+          usclk => usclk,
+          power => power,
+          period => std_logic_vector(to_unsigned(8192, 32)),
+          pulse => pulse
+        );
+
+    power (10 downto 0) <= (others => '0');
+    power (31 downto 14) <= (others => '0');
+    power(13 downto 11) <= speed;
   
     wait_time_1 <= "0000000000000100";
     wait_time_2 <= "0000000000000100";
@@ -58,17 +91,20 @@ begin
     enable_1 <= '1';
     enable_2 <= '1'; 
     
+    motor_ena <= motor_ena_i and pulse;
+    motor_enb <= motor_enb_i and pulse;
+    
     turn_proc : process(turn, speed)
     begin      
         if turn = "010" then
-    	    motor_ena <= '0';
+    	    motor_ena_i <= '0';
         else
-            motor_ena <= speed(0);
+            motor_ena_i <= speed(0);
         end if;
         if turn = "011" then
-            motor_enb <= '0';
+            motor_enb_i <= '0';
         else
-            motor_enb <= speed(0);
+            motor_enb_i <= speed(0);
         end if;
     
         if turn = "001" then

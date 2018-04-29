@@ -95,7 +95,14 @@ component motor
            motor_in1 : out  STD_LOGIC;
            motor_in2 : out  STD_LOGIC;
            motor_in3 : out  STD_LOGIC;
-           motor_in4 : out  STD_LOGIC);
+           motor_in4 : out  STD_LOGIC;
+           wait_time_1 : out std_logic_vector(15 downto 0);
+           alarm_1     : in STD_LOGIC;
+           enable_1    : out STD_LOGIC;
+           wait_time_2 : out std_logic_vector(15 downto 0);
+           alarm_2     : in STD_LOGIC;
+           enable_2    : out STD_LOGIC
+);
 end component;
 
 component driver
@@ -134,7 +141,13 @@ begin
            motor_in1 => motor_in1,
            motor_in2 => motor_in2,
            motor_in3 => motor_in3,
-           motor_in4 => motor_in4
+           motor_in4 => motor_in4,
+           wait_time_1 => motor_wait_time_1, 
+           alarm_1 => motor_alarm_1,
+           enable_1 => motor_enable_1,
+           wait_time_2 => motor_wait_time_2, 
+           alarm_2 => motor_alarm_2,
+           enable_2 => motor_enable_2
         );
 
     DriverInst : driver

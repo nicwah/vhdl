@@ -45,9 +45,9 @@ architecture Behavioral of driver is
 
 type states is (
     idle_state,
-    toggle_forward_backward_state,
-    drive_past_line_state, 
-    drive_until_line_found_state, 
+    waiting_for_start_line_state,
+    on_start_line_state,
+    drive_straight_state, 
     turn_hard_right_state, 
     turn_right_state, 
     turn_left_state, 
@@ -73,14 +73,14 @@ constant turn_left       : std_logic_vector(2 downto 0) := "010";
 constant turn_right      : std_logic_vector(2 downto 0) := "011";
 constant turn_hard_right : std_logic_vector(2 downto 0) := "100";
 
-constant veering_left     : std_logic_vector(2 downto 0) := "001";
-constant drifting_left    : std_logic_vector(2 downto 0) := "011";
-constant on_track         : std_logic_vector(2 downto 0) := "010";
-constant drifting_right   : std_logic_vector(2 downto 0) := "110";
-constant veering_right    : std_logic_vector(2 downto 0) := "100";
-constant on_starting_line : std_logic_vector(2 downto 0) := "101";
-constant on_finish_line   : std_logic_vector(2 downto 0) := "111";
-constant off_track        : std_logic_vector(2 downto 0) := "000";
+constant veering_left   : std_logic_vector(2 downto 0) := "001";
+constant drifting_left  : std_logic_vector(2 downto 0) := "011";
+constant on_track       : std_logic_vector(2 downto 0) := "010";
+constant drifting_right : std_logic_vector(2 downto 0) := "110";
+constant veering_right  : std_logic_vector(2 downto 0) := "100";
+constant on_start_line  : std_logic_vector(2 downto 0) := "101";
+constant on_finish_line : std_logic_vector(2 downto 0) := "111";
+constant off_track      : std_logic_vector(2 downto 0) := "000";
 
 begin
 
@@ -91,23 +91,38 @@ begin
         if rising_edge(alarm) then
             case state is
                 when idle_state =>
-                    state <= toggle_forward_backward_state;
-                when toggle_forward_backward_state =>
-                    state <= drive_past_line_state;
-                when drive_past_line_state =>
-                    state <= drive_until_line_found_state;
+                    state <= waiting_for_start_line_state;
                 when stop_state =>
-                    state <= toggle_forward_backward_state;
+                    state <= waiting_for_start_line_state;
                 when others => null;
             end case;
         end if;
 
         case state is
-            when drive_until_line_found_state =>
-                if line_sensor /= off_track then
-                    state <= stop_state;
+            when idle_state => null;
+            when stop_state => null;
+            when waiting_for_start_line_state =>
+                if line_sensor = on_start_line then
+                    state <= drive_straight_state;
                 end if;
-            when others => null;
+            when others =>
+                case line_sensor is
+                    when veering_left =>
+                        state <= turn_hard_right_state;
+                    when drifting_left =>
+                        state <= turn_right_state;
+                    when on_track =>
+                        state <= drive_straight_state;
+                    when drifting_right =>
+                        state <= turn_left_state;
+                    when veering_right =>
+                        state <= turn_hard_left_state;
+                    when on_finish_line =>
+                        state <= stop_state;
+                    when off_track =>
+                        state <= stop_state;
+                    when others => null;
+                end case;
         end case;
 	end process;
 	
@@ -118,21 +133,13 @@ begin
                 speed <= speed_none;
                 turn <= turn_ahead;
                 forward_i <= '0';
-                wait_time <= wait_4s;
-                enable_timer <= '1';
-            when toggle_forward_backward_state =>
-                forward_i <= not forward_i;
                 wait_time <= wait_1ms;
                 enable_timer <= '1';
-            when drive_past_line_state =>
-                turn <= turn_ahead;
-                speed <= speed_slow;
-                wait_time <= wait_1s;
-                enable_timer <= '1';
-            when drive_until_line_found_state =>
-                turn <= turn_ahead;
+            when waiting_for_start_line_state => null;
+            when drive_straight_state =>
                 speed <= speed_normal;
-                enable_timer <= '0';
+                forward_i <= '1';
+                turn <= turn_ahead;
             when turn_hard_right_state =>
                 turn <= turn_hard_right;
             when turn_right_state =>

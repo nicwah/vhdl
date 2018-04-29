@@ -81,59 +81,36 @@ BEGIN
         -- insert stimulus here 
         line_sensor <= "000";
 
-        -- idle => toggle
+        -- idle => wait
         alarm <= '1';
         wait for 10 ns;
         alarm <= '0';
         
         wait for 20 ns;
 
-        -- toggle => drive past line
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';
-        
+        -- wait => drive straight
+        line_sensor <= "101";
         wait for 20 ns;
 
-        -- drive past line => drive until line found
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';
+        -- drive straight
+        line_sensor <= "010";
+        wait for 20 ns;
 
-        -- drive until line found
-        wait for 100 ns;
+        -- drive straight => turn left
+        line_sensor <= "110";
+        wait for 20 ns;
 
-        -- drive until line found => stop
+        -- turn left => turn right
+        line_sensor <= "011";
+        wait for 20 ns;
+
+        -- turn right => drive straight
+        line_sensor <= "010";
+        wait for 20 ns;
+
+        -- drive straight => stop
         line_sensor <= "111";
-        wait for 10 ns;
-        line_sensor <= "000";
-
         wait for 20 ns;
-
-        -- stop => toggle
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';
-        
-        wait for 20 ns;
-        
-        -- toggle => drive past line
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';        
-        
-        wait for 20 ns;
-        
-        -- drive past line => drive until line found
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';        
-
-        -- drive until line found
-        wait for 100 ns;            
-
-        -- drive until line found => stop
-        line_sensor <= "111";
 
         wait;
     end process;

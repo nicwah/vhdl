@@ -56,6 +56,8 @@ type states is (
 signal state : states;
 
 signal forward_i : std_logic := '0';
+signal speed_i : std_logic_vector(2 downto 0) := "000";
+signal turn_i : std_logic_vector(2 downto 0) := "000";
 
 constant wait_1ms : std_logic_vector(15 downto 0) := "0000000000000001";
 constant wait_1s : std_logic_vector(15 downto 0) := "0000001111101000";
@@ -85,6 +87,8 @@ constant off_track      : std_logic_vector(2 downto 0) := "000";
 begin
 
     forward <= forward_i;
+    speed <= speed_i;
+    turn <= turn_i;
     
     ChangeStatesStateMachine : process(alarm, line_sensor)
     begin
@@ -130,26 +134,26 @@ begin
     begin
         case state is
             when idle_state =>
-                speed <= speed_none;
-                turn <= turn_ahead;
+                speed_i <= speed_none;
+                turn_i <= turn_ahead;
                 forward_i <= '0';
                 wait_time <= wait_1ms;
                 enable_timer <= '1';
             when waiting_for_start_line_state => null;
             when drive_straight_state =>
-                speed <= speed_normal;
+                speed_i <= speed_normal;
                 forward_i <= '1';
-                turn <= turn_ahead;
+                turn_i <= turn_ahead;
             when turn_hard_right_state =>
-                turn <= turn_hard_right;
+                turn_i <= turn_hard_right;
             when turn_right_state =>
-                turn <= turn_right;
+                turn_i <= turn_right;
             when turn_left_state =>
-                turn <= turn_left;
+                turn_i <= turn_left;
             when turn_hard_left_state =>
-                turn <= turn_hard_left;
+                turn_i <= turn_hard_left;
             when stop_state =>
-                speed <= speed_none;	
+                speed_i <= speed_none;	
                 wait_time <= wait_1ms;
                 enable_timer <= '1';
             when others => null;

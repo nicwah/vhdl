@@ -38,79 +38,77 @@ ARCHITECTURE behavior OF tb_driver IS
  
     COMPONENT driver
     PORT(
-         alarm : in std_logic;
+         mclk : in std_logic;
          line_sensor : in std_logic_vector(2 downto 0);
          speed : out std_logic_vector(2 downto 0);
          forward : out std_logic;
-         turn : out std_logic_vector (2 downto 0);
-         wait_time : out std_logic_vector(15 downto 0);
-         enable_timer : out std_logic
+         turn : out std_logic_vector (2 downto 0)
         );
     END COMPONENT;
     
     --Inputs
-    signal alarm : std_logic := '0';
+    signal mclk : std_logic := '0';
     signal line_sensor : std_logic_vector(2 downto 0) := "000";
     
  	--Outputs
     signal speed : std_logic_vector(2 downto 0);
     signal forward : std_logic;
     signal turn : std_logic_vector (2 downto 0);
-    signal wait_time : std_logic_vector(15 downto 0);
-    signal enable_timer : std_logic;
 	
+    constant clock_interval : time := 20 ns;
+    
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
     uut: driver PORT MAP (
-          alarm => alarm,
+          mclk => mclk,
           line_sensor => line_sensor,
           speed => speed,
           forward => forward,
-          turn => turn,
-          wait_time => wait_time,
-          enable_timer => enable_timer
+          turn => turn
         );
 
+    -- Clock process
+    clock_prc: process
+    begin
+        mclk <= '1';
+        wait for clock_interval/2;
+        mclk <= '0';
+        wait for clock_interval/2;
+    end process;
+    
     -- Stimulus process
     stim_proc: process
     begin		
         -- hold reset state for 100 ns.
         wait for 100 ns;	
 
-        -- insert stimulus here 
-        line_sensor <= "000";
-
-        -- idle => wait
-        alarm <= '1';
-        wait for 10 ns;
-        alarm <= '0';
-        
-        wait for 20 ns;
-
-        -- wait => drive straight
+        -- wait for start line => drive straight
         line_sensor <= "101";
-        wait for 20 ns;
+        wait for clock_interval;
 
         -- drive straight
         line_sensor <= "010";
-        wait for 20 ns;
+        wait for clock_interval;
 
         -- drive straight => turn left
         line_sensor <= "110";
-        wait for 20 ns;
+        wait for clock_interval;
 
         -- turn left => turn right
         line_sensor <= "011";
-        wait for 20 ns;
+        wait for clock_interval;
 
         -- turn right => drive straight
         line_sensor <= "010";
-        wait for 20 ns;
+        wait for clock_interval;
 
         -- drive straight => stop
         line_sensor <= "111";
-        wait for 20 ns;
+        wait for clock_interval;
+
+        -- stop => wait for start line
+        wait for clock_interval;
 
         wait;
     end process;

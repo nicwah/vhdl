@@ -31,20 +31,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity driver is
     Port ( 
-         alarm : in std_logic;
+         mclk : in std_logic;
          line_sensor : in std_logic_vector(2 downto 0);
          speed : out std_logic_vector(2 downto 0);
          forward : out std_logic;
-         turn : out std_logic_vector (2 downto 0);
-         wait_time : out std_logic_vector(15 downto 0);
-         enable_timer : out std_logic
+         turn : out std_logic_vector (2 downto 0)
          );
 end driver;
 
 architecture Behavioral of driver is
 
 type states is (
-    idle_state,
     waiting_for_start_line_state,
     on_start_line_state,
     drive_straight_state, 
@@ -52,17 +49,14 @@ type states is (
     turn_right_state, 
     turn_left_state, 
     turn_hard_left_state, 
-    stop_state);
-signal state : states;
+    stop_state,
+    search_for_track_state);
+    
+signal state : states := waiting_for_start_line_state;
 
 signal forward_i : std_logic := '0';
 signal speed_i : std_logic_vector(2 downto 0) := "000";
 signal turn_i : std_logic_vector(2 downto 0) := "000";
-
-constant wait_1ms : std_logic_vector(15 downto 0) := "0000000000000001";
-constant wait_1s : std_logic_vector(15 downto 0) := "0000001111101000";
-constant wait_2s : std_logic_vector(15 downto 0) := "0000011111010000";
-constant wait_4s : std_logic_vector(15 downto 0) := "0000111110100000";
 
 constant speed_none   : std_logic_vector(2 downto 0) := "000";
 constant speed_slow   : std_logic_vector(2 downto 0) := "001";
@@ -90,23 +84,18 @@ begin
     speed <= speed_i;
     turn <= turn_i;
     
-    ChangeStatesStateMachine : process(alarm, line_sensor)
+    ChangeStatesStateMachine : process(mclk)
     begin
-        if rising_edge(alarm) then
-            case state is
-                when idle_state =>
-                    state <= waiting_for_start_line_state;
-                when stop_state =>
-                    state <= waiting_for_start_line_state;
-                when others => null;
-            end case;
-        end if;
-
+    if rising_edge(mclk) then
         case state is
-            when idle_state => null;
-            when stop_state => null;
             when waiting_for_start_line_state =>
                 if line_sensor = on_start_line then
+                    state <= drive_straight_state;
+                end if;
+            when stop_state =>
+                state <= waiting_for_start_line_state;
+            when search_for_track_state =>
+                if line_sensor /= off_track then
                     state <= drive_straight_state;
                 end if;
             when others =>
@@ -124,38 +113,37 @@ begin
                     when on_finish_line =>
                         state <= stop_state;
                     when off_track =>
-                        state <= stop_state;
+                        state <= search_for_track_state;
                     when others => null;
                 end case;
         end case;
+    end if;
 	end process;
 	
     PerformActionsStateMachine : process(state)
     begin
         case state is
-            when idle_state =>
-                speed_i <= speed_none;
-                turn_i <= turn_ahead;
-                forward_i <= '0';
-                wait_time <= wait_1ms;
-                enable_timer <= '1';
             when waiting_for_start_line_state => null;
             when drive_straight_state =>
-                speed_i <= speed_normal;
+                speed_i <= speed_fast;
                 forward_i <= '1';
                 turn_i <= turn_ahead;
             when turn_hard_right_state =>
+                speed_i <= speed_normal;
                 turn_i <= turn_hard_right;
             when turn_right_state =>
+                speed_i <= speed_normal;
                 turn_i <= turn_right;
             when turn_left_state =>
+                speed_i <= speed_normal;
                 turn_i <= turn_left;
             when turn_hard_left_state =>
+                speed_i <= speed_normal;
                 turn_i <= turn_hard_left;
             when stop_state =>
-                speed_i <= speed_none;	
-                wait_time <= wait_1ms;
-                enable_timer <= '1';
+                speed_i <= speed_none;
+            when search_for_track_state =>
+                speed_i <= speed_slow;
             when others => null;
         end case;
     end process;

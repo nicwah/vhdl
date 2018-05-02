@@ -129,7 +129,7 @@ begin
                 forward_i <= '1';
                 turn_i <= turn_ahead;
             when turn_hard_right_state =>
-                speed_i <= speed_normal;
+                speed_i <= speed_slow;
                 turn_i <= turn_hard_right;
             when turn_right_state =>
                 speed_i <= speed_normal;
@@ -138,7 +138,7 @@ begin
                 speed_i <= speed_normal;
                 turn_i <= turn_left;
             when turn_hard_left_state =>
-                speed_i <= speed_normal;
+                speed_i <= speed_slow;
                 turn_i <= turn_hard_left;
             when stop_state =>
                 speed_i <= speed_none;

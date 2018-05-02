@@ -41,7 +41,7 @@ architecture Behavioral of top_ai is
 
 alias linetracking : std_logic_vector(2 downto 0) is btn(2 downto 0);
 
-signal speed : STD_LOGIC_VECTOR (2 downto 0);
+signal speed : std_logic_vector(2 downto 0);
 signal forward : std_logic;
 signal turn : std_logic_vector(2 downto 0);
 
@@ -61,9 +61,10 @@ begin
     led(1) <= speed(0);
     led(2) <= speed(1);
     led(3) <= speed(2);
-    led(4) <= turn(0);
-    led(5) <= turn(1);
-    led(6) <= turn(2);
+    led(4) <= '0';
+    led(5) <= turn(0);
+    led(6) <= turn(1);
+    led(7) <= turn(2);
     
     DriverInst : driver
         port map (

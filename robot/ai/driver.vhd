@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -54,10 +54,6 @@ type states is (
     
 signal state : states := waiting_for_start_line_state;
 
-signal forward_i : std_logic := '0';
-signal speed_i : std_logic_vector(2 downto 0) := "000";
-signal turn_i : std_logic_vector(2 downto 0) := "000";
-
 constant speed_none   : std_logic_vector(2 downto 0) := "000";
 constant speed_slow   : std_logic_vector(2 downto 0) := "001";
 constant speed_normal : std_logic_vector(2 downto 0) := "100";
@@ -79,10 +75,6 @@ constant on_finish_line : std_logic_vector(2 downto 0) := "111";
 constant off_track      : std_logic_vector(2 downto 0) := "000";
 
 begin
-
-    forward <= forward_i;
-    speed <= speed_i;
-    turn <= turn_i;
     
     ChangeStatesStateMachine : process(mclk)
     begin
@@ -123,29 +115,31 @@ begin
     PerformActionsStateMachine : process(state)
     begin
         case state is
-            when waiting_for_start_line_state => null;
+            when waiting_for_start_line_state =>
+                speed <= speed_none;
             when drive_straight_state =>
-                speed_i <= speed_fast;
-                forward_i <= '1';
-                turn_i <= turn_ahead;
+                speed <= speed_fast;
+                forward <= '1';
+                turn <= turn_ahead;
             when turn_hard_right_state =>
-                speed_i <= speed_slow;
-                turn_i <= turn_hard_right;
+                speed <= speed_slow;
+                turn <= turn_hard_right;
             when turn_right_state =>
-                speed_i <= speed_normal;
-                turn_i <= turn_right;
+                speed <= speed_normal;
+                turn <= turn_right;
             when turn_left_state =>
-                speed_i <= speed_normal;
-                turn_i <= turn_left;
+                speed <= speed_normal;
+                turn <= turn_left;
             when turn_hard_left_state =>
-                speed_i <= speed_slow;
-                turn_i <= turn_hard_left;
+                speed <= speed_slow;
+                turn <= turn_hard_left;
             when stop_state =>
-                speed_i <= speed_none;
+                speed <= speed_none;
             when search_for_track_state =>
-                speed_i <= speed_slow;
+                speed <= speed_slow;
+                turn <= turn_ahead;
             when others => null;
         end case;
     end process;
-    
+        
 end Behavioral;

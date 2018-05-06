@@ -81,9 +81,9 @@ COMPONENT pwm is
           pulse => pulse
         );
 
-    power (10 downto 0) <= (others => '0');
-    power (31 downto 14) <= (others => '0');
-    power(13 downto 11) <= speed;
+    power (9 downto 0) <= (others => speed(2));
+    power (31 downto 13) <= (others => '0');
+    power(12 downto 10) <= speed;
   
     wait_time_1 <= "0000000000000100";
     wait_time_2 <= "0000000000000100";
@@ -99,12 +99,12 @@ COMPONENT pwm is
         if turn = "010" then
     	    motor_ena_i <= '0';
         else
-            motor_ena_i <= speed(0);
+            motor_ena_i <= speed(0) or speed(1) or speed(2);
         end if;
         if turn = "011" then
             motor_enb_i <= '0';
         else
-            motor_enb_i <= speed(0);
+            motor_enb_i <= speed(0) or speed(1) or speed(2);
         end if;
     
         if turn = "001" then

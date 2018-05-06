@@ -34,6 +34,9 @@ entity top_robot is
            btn : in std_logic_vector(3 downto 0); 
            sw : in std_logic_vector(7 downto 0);
            led : out std_logic_vector(7 downto 0);
+           seg : out std_logic_vector(6 downto 0);
+           an : out std_logic_vector(3 downto 0);
+           dp : out std_logic;
            pio : inout std_logic_vector(87 downto 72));
 end top_robot;
 
@@ -54,12 +57,9 @@ alias bluetooth_out : std_logic is pio(87);
 alias bluetooth_in : std_logic is pio(86);
 
 signal speed : STD_LOGIC_VECTOR (2 downto 0);
-signal actual_speed : STD_LOGIC_VECTOR (2 downto 0);
+--signal actual_speed : STD_LOGIC_VECTOR (2 downto 0);
 signal forward : std_logic;
 signal turn : std_logic_vector(2 downto 0);
-signal driver_alarm : std_logic;
-signal driver_wait_time : std_logic_vector(15 downto 0);
-signal driver_enable : std_logic;
 
 signal motor_alarm_1 : std_logic;
 signal motor_alarm_2 : std_logic;
@@ -101,28 +101,38 @@ component motor
            enable_1    : out STD_LOGIC;
            wait_time_2 : out std_logic_vector(15 downto 0);
            alarm_2     : in STD_LOGIC;
-           enable_2    : out STD_LOGIC
+           enable_2    : out STD_LOGIC;
+           usclk : in STD_LOGIC
 );
 end component;
 
 component driver
-    Port ( alarm : in  std_logic;
+    Port ( mclk : in  std_logic;
+           line_sensor : in std_logic_vector(2 downto 0);
            speed : out  std_logic_vector (2 downto 0);
            forward : out  std_logic;
-           turn : out  std_logic_vector (2 downto 0);
-           wait_time : out std_logic_vector (15 downto 0);
-           enable_timer : out std_logic);
+           turn : out  std_logic_vector (2 downto 0));
+end component;
+
+component display
+    port ( msclk : in std_logic;
+           display_value : in std_logic_vector(15 downto 0);
+           precision : in std_logic_vector(1 downto 0);
+           an : out std_logic_vector(3 downto 0);
+           seg : out std_logic_vector(6 downto 0);
+           dp : out std_logic);
 end component;
 
 begin
 
     led(0) <= forward;
     led(1) <= turn(0) or turn(1) or turn(2);
-    led(2) <= driver_enable;
-    led(3) <= motor_enable_1;
-    led(4) <= motor_enable_2;
+    led(2) <= speed(0);
+    led(3) <= speed(1);
+    led(4) <= speed(2);
+    led(7 downto 5) <= linetracking(2 downto 0);
 
-    actual_speed <= "000" when sw(0) = '0' else speed;
+--    actual_speed <= "000" when sw(0) = '0' else speed;
 
     ClockInst : clock
         port map (
@@ -130,10 +140,20 @@ begin
             usclk => usclk,
             msclk => msclk
         );
-        
+
+    DisplayInst : display
+        port map (
+            msclk => msclk,
+            display_value => "0001001000110100",
+            precision => "01",
+            an => an,
+            seg => seg,
+            dp => dp
+        );
+
     MotorInst : motor
         port map (
-           speed => actual_speed,
+           speed => speed,
            forward => forward,
            turn => turn,
            motor_ena => motor_ena,
@@ -147,25 +167,17 @@ begin
            enable_1 => motor_enable_1,
            wait_time_2 => motor_wait_time_2, 
            alarm_2 => motor_alarm_2,
-           enable_2 => motor_enable_2
+           enable_2 => motor_enable_2,
+           usclk => usclk
         );
 
     DriverInst : driver
         port map (
-            alarm => driver_alarm,
+            mclk => mclk,
+            line_sensor => linetracking,
             speed => speed,
             forward => forward,
-            turn => turn,
-            wait_time => driver_wait_time,
-            enable_timer => driver_enable
-        );
-
-    DriverTimerInst : timer
-        port map (
-            waittime => driver_wait_time,
-            alarm => driver_alarm,
-            enable => driver_enable,
-            msclk => msclk
+            turn => turn
         );
 
     MotorTimer1Inst : timer

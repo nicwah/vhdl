@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   11:38:47 04/27/2018
+-- Create Date:   17:51:03 04/29/2018
 -- Design Name:   
 -- Module Name:   /home/torbjorn/git/vhdl/robot/tb_robot.vhd
 -- Project Name:  robot
@@ -38,13 +38,6 @@ END tb_robot;
 ARCHITECTURE behavior OF tb_robot IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
-
-alias motor_ena : std_logic is pio(81);  -- Left motor speed
-alias motor_enb : std_logic is pio(80);  -- Right motor speed
-alias motor_in1 : std_logic is pio(79);  -- Left motor control
-alias motor_in2 : std_logic is pio(78);  -- Left motor control
-alias motor_in3 : std_logic is pio(77);  -- Right motor control
-alias motor_in4 : std_logic is pio(76);  -- Right motor control
  
     COMPONENT top_robot
     PORT(
@@ -52,6 +45,7 @@ alias motor_in4 : std_logic is pio(76);  -- Right motor control
          btn : IN  std_logic_vector(3 downto 0);
          sw : IN  std_logic_vector(7 downto 0);
          led : OUT  std_logic_vector(7 downto 0);
+         seg : OUT  std_logic_vector(6 downto 0);
          pio : INOUT  std_logic_vector(87 downto 72)
         );
     END COMPONENT;
@@ -67,6 +61,7 @@ alias motor_in4 : std_logic is pio(76);  -- Right motor control
 
  	--Outputs
    signal led : std_logic_vector(7 downto 0);
+   signal seg : std_logic_vector(6 downto 0);
 
    -- Clock period definitions
    constant mclk_period : time := 10 ns;
@@ -79,6 +74,7 @@ BEGIN
           btn => btn,
           sw => sw,
           led => led,
+          seg => seg,
           pio => pio
         );
 
@@ -96,13 +92,13 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-        wait for 100 ns;	
+      wait for 100 ns;	
 
-        wait for mclk_period*10;
+      wait for mclk_period*10;
 
-        
+      -- insert stimulus here 
 
-        wait;
+      wait;
    end process;
 
 END;
